@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
@@ -12,8 +12,16 @@ const Logout: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  useEffect(() => {
+    // If dialog is closed without action, redirect to dashboard
+    if (!open) {
+      navigate('/dashboard');
+    }
+  }, [open, navigate]);
+
   const handleLogout = () => {
-    // In a real app, this would clear authentication tokens
+    // In a real app with backend, this would call an API to invalidate tokens
+    // For now, we'll just remove the isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
     
     // Show success toast
@@ -27,6 +35,7 @@ const Logout: React.FC = () => {
   };
   
   const handleCancel = () => {
+    setOpen(false);
     navigate('/dashboard');
   };
 

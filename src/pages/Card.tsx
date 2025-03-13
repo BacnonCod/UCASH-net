@@ -7,9 +7,12 @@ import Navbar from '@/components/layout/navbar';
 import Sidebar from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import CardActionModal from '@/components/modals/CardActionModal';
 
 const Card: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [topupModalOpen, setTopupModalOpen] = useState(false);
   const { toast } = useToast();
   
   const [cardData, setCardData] = useState({
@@ -126,11 +129,18 @@ const Card: React.FC = () => {
                 </div>
                 
                 <div className="grid grid-cols-2 gap-3">
-                  <Button variant="outline" className="flex items-center justify-center">
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center justify-center"
+                    onClick={() => setHistoryModalOpen(true)}
+                  >
                     <CreditCard size={16} className="mr-2" />
                     History
                   </Button>
-                  <Button className="bg-ucash hover:bg-ucash-dark text-white flex items-center justify-center">
+                  <Button 
+                    className="bg-ucash hover:bg-ucash-dark text-white flex items-center justify-center"
+                    onClick={() => setTopupModalOpen(true)}
+                  >
                     <Clock size={16} className="mr-2" />
                     Top-up
                   </Button>
@@ -240,6 +250,19 @@ const Card: React.FC = () => {
           </div>
         </main>
       </div>
+      
+      {/* Card Modals */}
+      <CardActionModal 
+        open={historyModalOpen}
+        onOpenChange={setHistoryModalOpen}
+        action="history"
+      />
+      
+      <CardActionModal 
+        open={topupModalOpen}
+        onOpenChange={setTopupModalOpen}
+        action="topup"
+      />
     </div>
   );
 };
