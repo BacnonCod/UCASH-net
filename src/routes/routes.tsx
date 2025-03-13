@@ -13,6 +13,7 @@ import Overview from '../pages/Overview';
 import Help from '../pages/Help';
 import About from '../pages/About';
 import Terms from '../pages/Terms';
+import Logout from '../pages/Logout';
 
 const routes: RouteObject[] = [
   {
@@ -62,6 +63,10 @@ const routes: RouteObject[] = [
   {
     path: '/terms',
     element: <Terms />
+  },
+  {
+    path: '/logout',
+    element: <Logout />
   },
   {
     path: '*',

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MoreHorizontal, ArrowRight, Wallet2, CreditCard } from 'lucide-react';
@@ -7,8 +7,15 @@ import { Button } from '@/components/ui/button';
 import Navbar from '@/components/layout/navbar';
 import Sidebar from '@/components/layout/sidebar';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import BudgetDetailsModal from '@/components/modals/BudgetDetailsModal';
+import TransactionHistoryModal from '@/components/modals/TransactionHistoryModal';
+import SavingsDetailModal from '@/components/modals/SavingsDetailModal';
 
 const Dashboard: React.FC = () => {
+  const [budgetModalOpen, setBudgetModalOpen] = useState(false);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [savingsModalOpen, setSavingsModalOpen] = useState(false);
+  
   const chartData = [
     { week: 'Week 1', utilities: 12, groceries: 5, others: 25 },
     { week: 'Week 2', utilities: 30, groceries: 8, others: 10 },
@@ -80,7 +87,12 @@ const Dashboard: React.FC = () => {
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-semibold text-gray-800">Savings</h2>
-                  <Button variant="ghost" size="sm" className="text-gray-500">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-gray-500"
+                    onClick={() => setSavingsModalOpen(true)}
+                  >
                     <MoreHorizontal size={18} />
                   </Button>
                 </div>
@@ -88,7 +100,12 @@ const Dashboard: React.FC = () => {
                 <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-medium">Life Savings</h3>
-                    <Button variant="ghost" size="sm" className="text-gray-500 h-6 w-6 p-0">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-gray-500 h-6 w-6 p-0"
+                      onClick={() => setSavingsModalOpen(true)}
+                    >
                       <MoreHorizontal size={16} />
                     </Button>
                   </div>
@@ -119,13 +136,24 @@ const Dashboard: React.FC = () => {
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-semibold text-gray-800">Budget Overview</h2>
-                  <Link to="/budget" className="text-blue-500 text-sm hover:underline">See Details</Link>
+                  <Button 
+                    onClick={() => setBudgetModalOpen(true)}
+                    className="text-blue-500 text-sm hover:underline"
+                    variant="link"
+                  >
+                    See Details
+                  </Button>
                 </div>
                 
                 <div className="bg-ucash-dark rounded-lg p-5 text-white">
                   <div className="flex justify-between items-center mb-1">
                     <h3 className="font-medium">Monthly Budget</h3>
-                    <Button variant="ghost" size="sm" className="text-gray-300 h-6 w-6 p-0">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-gray-300 h-6 w-6 p-0"
+                      onClick={() => setBudgetModalOpen(true)}
+                    >
                       <MoreHorizontal size={16} />
                     </Button>
                   </div>
@@ -183,7 +211,10 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
                 
-                <Button className="w-full mt-5 bg-ucash hover:bg-ucash-dark text-white flex items-center justify-center">
+                <Button 
+                  className="w-full mt-5 bg-ucash hover:bg-ucash-dark text-white flex items-center justify-center"
+                  onClick={() => setReportModalOpen(true)}
+                >
                   <span>View Full Report</span>
                   <ArrowRight size={16} className="ml-2" />
                 </Button>
@@ -192,6 +223,10 @@ const Dashboard: React.FC = () => {
           </div>
         </main>
       </div>
+      
+      <BudgetDetailsModal open={budgetModalOpen} onOpenChange={setBudgetModalOpen} />
+      <TransactionHistoryModal open={reportModalOpen} onOpenChange={setReportModalOpen} />
+      <SavingsDetailModal open={savingsModalOpen} onOpenChange={setSavingsModalOpen} />
     </div>
   );
 };

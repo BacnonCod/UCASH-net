@@ -6,9 +6,13 @@ import { ArrowUpRight, ArrowDownRight, DollarSign, Calendar, Filter } from 'luci
 import Navbar from '@/components/layout/navbar';
 import Sidebar from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
+import FilterModal from '@/components/modals/FilterModal';
+import TransactionHistoryModal from '@/components/modals/TransactionHistoryModal';
 
 const Overview: React.FC = () => {
   const [timeframe, setTimeframe] = useState('monthly');
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [transactionsModalOpen, setTransactionsModalOpen] = useState(false);
   
   const monthlyData = [
     { name: 'Jan', income: 4200, expense: 3100 },
@@ -76,6 +80,11 @@ const Overview: React.FC = () => {
       date: '2 weeks ago' 
     },
   ];
+  
+  const handleApplyFilters = (filters: any) => {
+    console.log('Applied filters:', filters);
+    // In a real app, this would filter the data based on the applied filters
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -236,7 +245,12 @@ const Overview: React.FC = () => {
                 <div className="p-6 border-b border-gray-100">
                   <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold text-gray-800">Expense Breakdown</h2>
-                    <Button variant="ghost" size="sm" className="h-8 px-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-8 px-2"
+                      onClick={() => setFilterModalOpen(true)}
+                    >
                       <Filter size={16} className="text-gray-500" />
                     </Button>
                   </div>
@@ -282,7 +296,12 @@ const Overview: React.FC = () => {
               <div className="p-6 border-b border-gray-100">
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-semibold text-gray-800">Recent Transactions</h2>
-                  <Button className="bg-ucash-dark text-white text-xs h-8">View All</Button>
+                  <Button 
+                    className="bg-ucash-dark text-white text-xs h-8"
+                    onClick={() => setTransactionsModalOpen(true)}
+                  >
+                    View All
+                  </Button>
                 </div>
               </div>
               
@@ -322,6 +341,18 @@ const Overview: React.FC = () => {
           </div>
         </main>
       </div>
+      
+      <FilterModal
+        open={filterModalOpen}
+        onOpenChange={setFilterModalOpen}
+        onApply={handleApplyFilters}
+        type="expenses"
+      />
+      
+      <TransactionHistoryModal
+        open={transactionsModalOpen}
+        onOpenChange={setTransactionsModalOpen}
+      />
     </div>
   );
 };
