@@ -9,6 +9,10 @@ import Notifications from '../pages/Notifications';
 import Account from '../pages/Account';
 import Card from '../pages/Card';
 import NotFound from '../pages/NotFound';
+import Overview from '../pages/Overview';
+import Help from '../pages/Help';
+import About from '../pages/About';
+import Terms from '../pages/Terms';
 
 const routes: RouteObject[] = [
   {
@@ -28,6 +32,10 @@ const routes: RouteObject[] = [
     element: <Dashboard />
   },
   {
+    path: '/overview',
+    element: <Overview />
+  },
+  {
     path: '/transactions',
     element: <Transactions />
   },
@@ -42,6 +50,18 @@ const routes: RouteObject[] = [
   {
     path: '/card',
     element: <Card />
+  },
+  {
+    path: '/help',
+    element: <Help />
+  },
+  {
+    path: '/about',
+    element: <About />
+  },
+  {
+    path: '/terms',
+    element: <Terms />
   },
   {
     path: '*',

@@ -1,17 +1,21 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/layout/navbar';
 import Sidebar from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 const Account: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const { toast } = useToast();
+  const [profilePhoto, setProfilePhoto] = useState("/lovable-uploads/93b109d4-bfe1-44c4-a068-5c4308286af7.png");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast: uiToast } = useToast();
   
   const [userData, setUserData] = useState({
     fullName: 'Ralph Laurenz',
@@ -22,12 +26,40 @@ const Account: React.FC = () => {
     password: '********'
   });
   
+  const [savedUserData, setSavedUserData] = useState({...userData});
+  
   const handleSave = () => {
+    // Simulating saving profile photo
+    if (photoFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setProfilePhoto(reader.result);
+        }
+      };
+      reader.readAsDataURL(photoFile);
+      setPhotoFile(null);
+    }
+    
+    setSavedUserData({...userData});
     setIsEditing(false);
-    toast({
+    
+    // Show success toast with different methods
+    uiToast({
       title: "Account updated",
       description: "Your account information has been successfully updated.",
     });
+    
+    toast.success("Profile saved successfully", {
+      description: "All your changes have been saved."
+    });
+  };
+  
+  const handleCancel = () => {
+    // Revert changes
+    setUserData({...savedUserData});
+    setPhotoFile(null);
+    setIsEditing(false);
   };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +68,27 @@ const Account: React.FC = () => {
       ...userData,
       [name]: value
     });
+  };
+  
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setPhotoFile(e.target.files[0]);
+      
+      // Create a preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+  
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   return (
@@ -86,18 +139,39 @@ const Account: React.FC = () => {
               
               <div className="p-6">
                 <div className="flex flex-col md:flex-row items-center mb-8">
-                  <div className="w-32 h-32 rounded-full overflow-hidden mb-4 md:mb-0 md:mr-6 border-4 border-gray-200">
+                  <div className="w-32 h-32 rounded-full overflow-hidden mb-4 md:mb-0 md:mr-6 border-4 border-gray-200 relative group">
                     <img 
-                      src="/lovable-uploads/93b109d4-bfe1-44c4-a068-5c4308286af7.png" 
+                      src={photoFile ? URL.createObjectURL(photoFile) : profilePhoto} 
                       alt="Profile" 
                       className="w-full h-full object-cover" 
                     />
+                    
+                    {isEditing && (
+                      <div 
+                        className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        onClick={triggerFileInput}
+                      >
+                        <Upload className="text-white" />
+                      </div>
+                    )}
                   </div>
                   
                   {isEditing && (
-                    <Button className="mb-4 md:mb-0 bg-ucash hover:bg-ucash-dark text-white">
-                      Change Photo
-                    </Button>
+                    <>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                      />
+                      <Button 
+                        className="mb-4 md:mb-0 bg-ucash hover:bg-ucash-dark text-white"
+                        onClick={triggerFileInput}
+                      >
+                        Change Photo
+                      </Button>
+                    </>
                   )}
                 </div>
                 
@@ -213,7 +287,7 @@ const Account: React.FC = () => {
                   <div className="mt-8 flex justify-end">
                     <Button 
                       variant="outline" 
-                      onClick={() => setIsEditing(false)} 
+                      onClick={handleCancel} 
                       className="mr-3"
                     >
                       Cancel

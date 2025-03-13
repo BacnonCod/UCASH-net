@@ -9,7 +9,9 @@ import {
   User, 
   CreditCard,
   HelpCircle,
-  LogOut
+  LogOut,
+  Info,
+  FileText
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -27,6 +29,8 @@ const Sidebar: React.FC = () => {
   
   const bottomMenuItems = [
     { icon: HelpCircle, label: 'Help', path: '/help' },
+    { icon: Info, label: 'About Us', path: '/about' },
+    { icon: FileText, label: 'Terms', path: '/terms' },
     { icon: LogOut, label: 'Log Out', path: '/logout' },
   ];
   
